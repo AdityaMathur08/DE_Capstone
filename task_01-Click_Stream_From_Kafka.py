@@ -8,6 +8,7 @@ spark = SparkSession \
     .builder \
     .appName("ClickStream_From_Kafka") \
     .getOrCreate()
+
 spark.sparkContext.setLoglevel("ERROR")
 
 # Host , port and topic configs
@@ -25,18 +26,18 @@ clickStream_raw =spark.readStream \
         .load()
 
 # Defining Schema of a single record
-json_schema = StructType([StructField("customer_id",IntegerType()), 
+json_schema = StructType([StructField("customer_id",StringType()), 
                          StructField("app_version",StringType()),
                          StructField("os_version",StringType()),
-                         StructField("lat",FloatType()),
-                         StructField("lon",FloatType()),
+                         StructField("lat",StringType()),
+                         StructField("lon",StringType()),
                          StructField("page_id",StringType()),
                          StructField("button_id",StringType()),
                          StructField("is_button_click",StringType()),
                          StructField("is_page_view",StringType()),
                          StructField("is_scroll_up",StringType()),
                          StructField("is_scroll_down",StringType()),
-                         StructField("timestamp",TimeStampType())])
+                         StructField("timestamp",StringType())])
 
 #
 clickstream = clickStream_raw.select(from_json(col("value").cast("string"),json_schema).alias("data")).select("data.*")
@@ -50,7 +51,17 @@ query = clickstream \
         .option("checkpointLocation","ClickStreamData_CHK_PNT") \
         .start()
 
+
+query_2 = clickstream  \
+    .writeStream  \
+	.outputMode("append")  \
+	.format("console")  \
+	.option("truncate", "False")  \
+	.start()
+
 query.awaitTermination()
+query_2.awaitTermination()
+
 
 
 # To Start running the script on spark cluster command:
