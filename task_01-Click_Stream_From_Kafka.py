@@ -9,7 +9,7 @@ spark = SparkSession \
     .appName("ClickStream_From_Kafka") \
     .getOrCreate()
 
-spark.sparkContext.setLoglevel('ERROR')
+spark.sparkContext.setLogLevel('ERROR')
 
 # Host , port and topic configs
 host = "18.211.252.152"
@@ -47,8 +47,9 @@ query = clickstream \
         .format("csv") \
         .outputMode("append") \
         .option("truncate","false") \
-        .option("path","ClickStreamData") \
-        .option("checkpointLocation","ClickStreamData_CHK_PNT") \
+        .option("path","Capstone/ClickStreamData") \
+        .option("checkpointLocation","Capstone/ClickStreamData_CHK_PNT") \
+        .trigger(processingTime='1 minute') \
         .start()
 
 
