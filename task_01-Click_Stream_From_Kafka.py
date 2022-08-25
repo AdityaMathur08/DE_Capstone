@@ -9,7 +9,7 @@ spark = SparkSession \
     .appName("ClickStream_From_Kafka") \
     .getOrCreate()
 
-spark.sparkContext.setLoglevel("ERROR")
+spark.sparkContext.setLoglevel('ERROR')
 
 # Host , port and topic configs
 host = "18.211.252.152"
@@ -20,7 +20,7 @@ topic = "de-capstone3"
 clickStream_raw =spark.readStream \
         .format("kafka") \
         .option("kafka.bootstrap.servers", host +":"+port) \
-        .option("startingOffsets", "latest") \
+        .option("startingOffsets", "earliest") \
         .option("subscribe", topic) \
         .option("failOnDataLoss", False) \
         .load()
