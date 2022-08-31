@@ -4,4 +4,4 @@ sqoop import \
 --username student \ 
 --password STUDENT123 \ 
 --target-dir /home/hadoop/Capstone/Bookings_Batch_data \ 
--m 1
+--m 1
