@@ -1,0 +1,58 @@
+
+# Creating a database
+
+CREATE DATABASE IF NOT EXISTS capstone;
+
+DESCRIBE DATABASE EXTENDED capstone;
+
+# Create a Hive Managed table for Clickstream data.
+Create  table if not exists clickstream (
+       customer_id String,
+        app_version String,
+        os_version String,
+        lat String,
+        lon String,
+        page_id String,
+        button_id String,
+        is_button_click String,
+        is_page_view String,
+        is_scroll_up String,
+        is_scroll_down String,
+        `timestamp` String)
+row format delimited 
+fields terminated by ',' 
+lines terminated by '\n'
+stored as textfile;
+
+
+Load data inpath '/user/hadoop/Capstone/ClickStreamData/part-00000-7171026c-78d5-443d-9047-f0aab83e8305-c000.csv' into table clickstream;
+
+# Create Hive Managed table for bookings data:
+
+
+Create  table if not exists bookings (
+        booking_id String,
+        customer_id String,
+        driver_id String,
+        customer_app_version String,
+        customer_phone_os_version String,
+        pickup_lat String,
+        pickup_lon String,
+        drop_lat String,
+        drop_lon String,
+        pickup_timestamp timestamp,
+        drop_timestamp timestamp,
+        trip_fare float,
+        trip_amount float,
+        currency_code String,
+        cab_color String,
+        cab_registration_number String,
+        customer_rating_by_driver int,
+        rating_by_customer int,
+        passenger_count int)
+row format delimited 
+fields terminated by ',' 
+lines terminated by '\n'
+stored as textfile;
+
+Load data inpath '/user/hadoop/Capstone/Bookings_Batch_data/part-m-00000' into table bookings;
