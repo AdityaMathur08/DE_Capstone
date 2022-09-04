@@ -5,7 +5,9 @@ CREATE DATABASE IF NOT EXISTS capstone;
 
 DESCRIBE DATABASE EXTENDED capstone;
 
-# Create a Hive Managed table for Clickstream data.
+USE capstone;
+
+-- Create a Hive Managed table for Clickstream data.
 Create  table if not exists clickstream (
        customer_id String,
         app_version String,
@@ -25,9 +27,9 @@ lines terminated by '\n'
 stored as textfile;
 
 
-Load data inpath '/user/hadoop/Capstone/ClickStreamData/part-00000-7171026c-78d5-443d-9047-f0aab83e8305-c000.csv' into table clickstream;
+Load data inpath '/user/hadoop/Capstone/ClickStreamData/part-00000-c132f8c8-2ff1-49ad-a199-24673e624285-c000.csv' into table clickstream;
 
-# Create Hive Managed table for bookings data:
+-- Create Hive Managed table for bookings data:
 
 
 Create  table if not exists bookings (
@@ -43,7 +45,7 @@ Create  table if not exists bookings (
         pickup_timestamp timestamp,
         drop_timestamp timestamp,
         trip_fare float,
-        trip_amount float,
+        tip_amount float,
         currency_code String,
         cab_color String,
         cab_registration_number String,
@@ -56,3 +58,17 @@ lines terminated by '\n'
 stored as textfile;
 
 Load data inpath '/user/hadoop/Capstone/Bookings_Batch_data/part-m-00000' into table bookings;
+
+
+-- Create a Hive-managed table for aggregated data in Task 3.
+
+CREATE TABLE IF NOT EXISTS rides_aggregation (
+        booking_date date,
+        rides_booked int
+)
+row format delimited 
+fields terminated by ',' 
+lines terminated by '\n'
+stored as textfile;
+
+Load data inpath '/user/hadoop/Capstone/aggregations/part-00000-597eca41-05e8-4258-b4ac-17b1e267fe2e-c000.csv' into table rides_aggregation;

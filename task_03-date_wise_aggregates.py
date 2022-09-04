@@ -12,7 +12,7 @@ spark = SparkSession.builder.master("local").appName("datewise_booking").getOrCr
 sc = spark.sparkContext
 sc
 
-stream_df = spark.read.csv("/user/hadoop/Capstone/ClickStreamData/part-00000-7171026c-78d5-443d-9047-f0aab83e8305-c000.csv",inferSchema = True)
+stream_df = spark.read.csv("/user/hadoop/Capstone/ClickStreamData/part-00000-c132f8c8-2ff1-49ad-a199-24673e624285-c000.csv",inferSchema = True)
 
 
 stream_df = stream_df.withColumnRenamed("_c0","customer_id")\
@@ -56,3 +56,8 @@ batch_df =  batch_df.withColumn("date", date_format('pickup_timestamp', "yyyy-MM
 date_agg = batch_df.groupBy('date').count()
 
 date_agg.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').save('/user/hadoop/Capstone/aggregations/', header = 'true')
+
+
+# To Start running the script on spark cluster command:
+# export SPARK_KAFKA_VERSION=0.10
+# spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 task_03-date_wise_aggregates.py
